@@ -1,4 +1,4 @@
-#Kondo KRS 60003 R2 HV with RPI3 (Model B + & Raspbian OS)  
+# Kondo KRS 60003 R2 HV with Rpi3 (Model B+ & Raspbian OS)  
 
 
 ### Check on which port uart is activated by:
