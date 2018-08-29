@@ -19,8 +19,6 @@ int main ()
 		return 1 ;
 	}
 
-  
-
 	int set_pos (unsigned char id, int pos){
 		unsigned char tx[3]; 
 		unsigned char rx[3];
@@ -47,11 +45,10 @@ int main ()
 		}
     	}	
 
-	// 3500 < i << 11500 and 7500 is default neutral postion
+	// 3500 < a << 11500 and 7500 is default neutral postion
         
-	
  	for(int a = 3500; a < 11500; a++){
-		set_pos(a,7500);
+		set_pos(0,a);
   		dat = serialGetchar (serial_port);
 		}
 
