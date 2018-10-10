@@ -1,14 +1,1 @@
-# Kondo KRS 60003 R2 HV with Rpi3 (Model B+ & Raspbian OS)  
-
-
-### Check on which port uart is activated by:
- 
-	ls -l /dev | grep serial
-
-serial0 is TX and RX 
-
-### Give Permission to the above port:
- 
-	sudo chmod 777  /dev/ttyS0
-
-
+Checkout the [Wiki Page.](https://github.com/ajaygunalan/kondo/wiki/Kondo-Servo-Series---Wiki)
