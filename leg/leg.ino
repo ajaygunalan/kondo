@@ -7,46 +7,65 @@ const int TIMEOUT = 1000;
 
 IcsHardSerialClass krs(&Serial,EN_PIN,BAUDRATE,TIMEOUT); 
 
-unsigned int start_pos[1]; 
-unsigned int end_pos[1];
+unsigned int start_pos[2]; 
+unsigned int end_pos[2];
+
+
+/**********write the pos to a particular servo & check if the value is within the joint limits**********/
+void set_pos (byte id, unsigned int angle){
+  switch(id){
+
+    case 0:
+    if (angle >= KNEE_MIN && angle <= KNEE_MAX) {
+      Serial.println("Return Value of Knee");
+      Serial.println(krs.setPos(KNEE_ID, angle));
+    }
+    else
+      Serial.println("commanded angle exceeds  the joint limit of knee");
+    break;
+
+    case 1:
+    int temp;  
+    if (angle >= HIP_MIN && angle <= HIP_MAX){
+      Serial.println("Return Value of Hip");
+      Serial.println(krs.setPos(HIP_ID, angle));
+    }
+    else
+      Serial.println("commanded angle exceeds the joint limit of hip");
+      break;
+
+    default:
+        Serial.println("ID is wrong");
+  }
+}
+
+/**********Given a start and end point this will give a bunch of intermediate points**********/
+void single_traj_write (byte id, unsigned int  start_pos, unsigned int end_pos){
+  for(unsigned int commanded_pos =  start_pos; commanded_pos <= end_pos; commanded_pos = commanded_pos + STEP_SIZE){
+    set_pos(id, commanded_pos);
+    delay(DELAY);
+  }
+
+  for(unsigned int commanded_pos =  end_pos; commanded_pos >= start_pos; commanded_pos = commanded_pos - STEP_SIZE){
+    set_pos(id, commanded_pos);
+    delay(DELAY);
+  }
+}
 
 void setup() {
   krs.begin();
-  start_pos[1]= 7000;
-  end_pos[1] = 10000;
+  
+/**********Set the start and end position of the Knee**********/
+//  start_pos[KNEE_ID] = 3400;
+//  end_pos[KNEE_ID]= 8300;
 
+/**********Set the start and end position of the Hip**********/
+  start_pos[HIP_ID] = 6600;
+  end_pos[HIP_ID]= 11000;
  }
 
 void loop() {
-  single_traj_write (HIP_ID, start_pos[1], end_pos[1]);
+
+//  single_traj_write(KNEE_ID, start_pos[KNEE_ID], end_pos[KNEE_ID]);
+  single_traj_write (HIP_ID, start_pos[HIP_ID], end_pos[HIP_ID]);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-    // set_angle(HIP_ID, 8000);
-
-//     set_angle(HIP_ID, 11499);
-//     set_angle(KNEE_ID, 3499);
-
-
-//     Serial.println("Hip & Knee");
-//     Serial.println(krs.getPos(HIP_ID));
-//     Serial.println(krs.getPos(KNEE_ID));
-
-
-// //   set_angle(HIP_ID, SIT_HIP);
-// //   set_angle(KNEE_ID, SIT_KNEE);
-// //
-// //   delay(1000);
-// //
-// //   set_angle(HIP_ID, STAND_HIP);
-// //   set_angle(KNEE_ID, STAND_KNEE);
