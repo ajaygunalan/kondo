@@ -10,7 +10,6 @@ IcsHardSerialClass krs(&Serial,EN_PIN,BAUDRATE,TIMEOUT);
 unsigned int start_pos[2]; 
 unsigned int end_pos[2];
 
-
 /**********write the pos to a particular servo & check if the value is within the joint limits**********/
 void set_pos (byte id, unsigned int angle){
   switch(id){
@@ -52,20 +51,79 @@ void single_traj_write (byte id, unsigned int  start_pos, unsigned int end_pos){
   }
 }
 
+/**********B**********/
+void bulk_traj_write (byte id, unsigned int  start_pos, unsigned int end_pos){
+  for(unsigned int commanded_pos =  start_pos; commanded_pos <= end_pos; commanded_pos = commanded_pos + STEP_SIZE){
+    set_pos(id, commanded_pos);
+    delay(DELAY);
+  }
+
+  for(unsigned int commanded_pos =  end_pos; commanded_pos >= start_pos; commanded_pos = commanded_pos - STEP_SIZE){
+    set_pos(id, commanded_pos);
+    delay(DELAY);
+  }
+}
+
 void setup() {
   krs.begin();
   
 /**********Set the start and end position of the Knee**********/
 //  start_pos[KNEE_ID] = 3400;
 //  end_pos[KNEE_ID]= 8300;
+//  start_pos[KNEE_ID] = SIT_KNEE;
+//  end_pos[KNEE_ID]= STAND_KNEE;
 
 /**********Set the start and end position of the Hip**********/
-  start_pos[HIP_ID] = 6600;
-  end_pos[HIP_ID]= 11000;
+//  start_pos[HIP_ID] = 6600;
+//  end_pos[HIP_ID]= 11000;
+//  start_pos[HIP_ID] = SIT_HIP;
+//  end_pos[HIP_ID]= STAND_HIP;
+
  }
 
-void loop() {
 
+void loop() {
+//  Serial.println("Knee and Hip");
+//  Serial.println(krs.setPos(KNEE_ID, SIT_KNEE));
+//  Serial.println(krs.setPos(HIP_ID,SIT_HIP));
+//  delay(DELAY);
+
+  Serial.println(krs.setPos(KNEE_ID, STAND_KNEE));
+  Serial.println(krs.setPos(HIP_ID,STAND_HIP));
+  delay(DELAY);
+
+//  Serial.println("Knee value is");
+//  Serial.println(krs.getPos(KNEE_ID));
+
+//  Serial.println("Hip value is");
+//  Serial.println(krs.getPos(HIP_ID));
+  
+  
 //  single_traj_write(KNEE_ID, start_pos[KNEE_ID], end_pos[KNEE_ID]);
-  single_traj_write (HIP_ID, start_pos[HIP_ID], end_pos[HIP_ID]);
+//  single_traj_write (HIP_ID, start_pos[HIP_ID], end_pos[HIP_ID]); 
 }
+
+
+                                           
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                                                                                                                                                                                            
+                                                                                                                                                          
+                                                                                                                                                          
+                                                                                                            
