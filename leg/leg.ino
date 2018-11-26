@@ -1,129 +1,59 @@
 #include <IcsHardSerialClass.h>
-#include "stoch.h"
+
+#define END_POS_1 11300
+#define END_POS_2 6900
+
+#define START_POS_1  8800
+#define START_POS_2  5900
+
+#define RANGE_1 2500
+#define RANGE_2 1000
+
+#define DELTA_1 25
+#define DELTA_2 10
+
+#define DELAY 10 //ms
 
 const byte EN_PIN = 2;
 const long BAUDRATE = 115200;
-const int TIMEOUT = 1000; 
-
-IcsHardSerialClass krs(&Serial,EN_PIN,BAUDRATE,TIMEOUT); 
-
-unsigned int start_pos[2]; 
-unsigned int end_pos[2];
-
-/**********write the pos to a particular servo & check if the value is within the joint limits**********/
-void set_pos (byte id, unsigned int angle){
-  switch(id){
-
-    case 0:
-    if (angle >= KNEE_MIN && angle <= KNEE_MAX) {
-      Serial.println("Return Value of Knee");
-      Serial.println(krs.setPos(KNEE_ID, angle));
-    }
-    else
-      Serial.println("commanded angle exceeds  the joint limit of knee");
-    break;
-
-    case 1:
-    int temp;  
-    if (angle >= HIP_MIN && angle <= HIP_MAX){
-      Serial.println("Return Value of Hip");
-      Serial.println(krs.setPos(HIP_ID, angle));
-    }
-    else
-      Serial.println("commanded angle exceeds the joint limit of hip");
-      break;
-
-    default:
-        Serial.println("ID is wrong");
-  }
-}
-
-/**********Given a start and end point this will give a bunch of intermediate points**********/
-void single_traj_write (byte id, unsigned int  start_pos, unsigned int end_pos){
-  for(unsigned int commanded_pos =  start_pos; commanded_pos <= end_pos; commanded_pos = commanded_pos + STEP_SIZE){
-    set_pos(id, commanded_pos);
-    delay(DELAY);
-  }
-
-  for(unsigned int commanded_pos =  end_pos; commanded_pos >= start_pos; commanded_pos = commanded_pos - STEP_SIZE){
-    set_pos(id, commanded_pos);
-    delay(DELAY);
-  }
-}
-
-/**********B**********/
-void bulk_traj_write (byte id, unsigned int  start_pos, unsigned int end_pos){
-  for(unsigned int commanded_pos =  start_pos; commanded_pos <= end_pos; commanded_pos = commanded_pos + STEP_SIZE){
-    set_pos(id, commanded_pos);
-    delay(DELAY);
-  }
-
-  for(unsigned int commanded_pos =  end_pos; commanded_pos >= start_pos; commanded_pos = commanded_pos - STEP_SIZE){
-    set_pos(id, commanded_pos);
-    delay(DELAY);
-  }
-}
+const int TIMEOUT = 1000;    
+IcsHardSerialClass krs(&Serial,EN_PIN,BAUDRATE,TIMEOUT);  
 
 void setup() {
-  krs.begin();
-  
-/**********Set the start and end position of the Knee**********/
-//  start_pos[KNEE_ID] = 3400;
-//  end_pos[KNEE_ID]= 8300;
-//  start_pos[KNEE_ID] = SIT_KNEE;
-//  end_pos[KNEE_ID]= STAND_KNEE;
+  // put your setup code here, to run once:
+  krs.begin(); 
+}
 
-/**********Set the start and end position of the Hip**********/
-//  start_pos[HIP_ID] = 6600;
-//  end_pos[HIP_ID]= 11000;
-//  start_pos[HIP_ID] = SIT_HIP;
-//  end_pos[HIP_ID]= STAND_HIP;
+void read_encoder(){
+  int a, b;
+  Serial.println("value of 1");
+  a = krs.getPos(1);
+  Serial.println(a);
 
- }
-
-
-void loop() {
-//  Serial.println("Knee and Hip");
-//  Serial.println(krs.setPos(KNEE_ID, SIT_KNEE));
-//  Serial.println(krs.setPos(HIP_ID,SIT_HIP));
-//  delay(DELAY);
-
-  Serial.println(krs.setPos(KNEE_ID, STAND_KNEE));
-  Serial.println(krs.setPos(HIP_ID,STAND_HIP));
-  delay(DELAY);
-
-//  Serial.println("Knee value is");
-//  Serial.println(krs.getPos(KNEE_ID));
-
-//  Serial.println("Hip value is");
-//  Serial.println(krs.getPos(HIP_ID));
-  
-  
-//  single_traj_write(KNEE_ID, start_pos[KNEE_ID], end_pos[KNEE_ID]);
-//  single_traj_write (HIP_ID, start_pos[HIP_ID], end_pos[HIP_ID]); 
+  Serial.println("value of 2");
+  b = krs.getPos(2);
+  Serial.println(b);
 }
 
 
-                                           
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                                                                                                                                                                                            
-                                                                                                                                                          
-                                                                                                                                                          
-                                                                                                            
+unsigned int set_one, set_two;
+
+void loop() {
+  
+  for(int i = 0; i < 1000; i++){
+
+        //Start to End
+        for (set_one = START_POS_1, set_two = START_POS_2; set_one <= END_POS_1 && set_two <= END_POS_2; set_one = set_one + DELTA_1, set_two = set_two + DELTA_2) {
+          krs.setPos(1, set_one);
+          krs.setPos(2, set_two);
+          delay(DELAY); 
+        }
+    
+        //End to Start
+        for (set_one = END_POS_1, set_two = END_POS_2; set_one >= START_POS_1 && set_two >= START_POS_2; set_one = set_one - DELTA_1, set_two = set_two - DELTA_2) {
+           krs.setPos(1, set_one);
+           krs.setPos(2, set_two);
+          delay(DELAY); 
+        }
+  }
+}
