@@ -1,4 +1,4 @@
-CONNECTIONS FOR UART COMMUNICATION BETWEEN ICS-UART (SERVO) AND ODROID XU4 SHIFTER SHIELD 
+Connections for UART communication between ICS-UART (Servo) and Odroid XU4 shifter shield 
 
 | ICS UART         | ODROID XU4 SHIFTER SHIELD                                |  
 |:----------        |:-------------                                          |
