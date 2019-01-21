@@ -11,4 +11,6 @@ Connections for UART communication between ICS-UART (Servo) and Odroid XU4 shift
 -----------
 Before powering on the servo motors, ensure that the ICS UART converter is in the execution mode. The following link depicts the right configuration for execution mode. https://github.com/ajaygunalan/kondo/blob/master/docs/write.png
 
-odroidxu4 password: odroid
+odroid xu-4 password: `odroid`
+
+[pinout diagram](https://wiki.odroid.com/odroid-xu4/hardware/expansion_connectors#gpio_map_for_wiringpi_library_shifter-shield_40_pin)
